@@ -41,6 +41,8 @@ namespace AssetStudioGUI
         public static List<AssetItem> visibleAssets = new List<AssetItem>();
         internal static Action<string> StatusStripUpdate = x => { };
 
+        public static ManualResetEvent JobCompleteEvent = new ManualResetEvent(false);
+
         public static int ExtractFolder(string path, string savePath)
         {
             int extractedCount = 0;
@@ -284,7 +286,7 @@ namespace AssetStudioGUI
                                     }
                                     assetItem.Container = path;
                                     assetItem.Text = !string.IsNullOrEmpty(path) ? Path.GetFileName(path) : binName;
-                                } 
+                                }
                             }
                             else assetItem.Text = string.Format("BinFile #{0}", assetItem.m_PathID);
                             exportable = true;
@@ -434,6 +436,52 @@ namespace AssetStudioGUI
             return typeMap;
         }
 
+
+        public static void TeapotExport(TreeNodeCollection nodes)
+        {
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                TeapotExporter.Output.Clear();
+                var gameObjects = new List<GameObject>();
+                GetSelectedParentNode(nodes, gameObjects);
+                if (gameObjects.Count > 0)
+                {
+
+                    var count = gameObjects.Count;
+                    int i = 0;
+                    Progress.Reset();
+                    foreach (var gameObject in gameObjects)
+                    {
+                        StatusStripUpdate($"Exporting {gameObject.m_Name}");
+                        try
+                        {
+                            var converter = new TeapotExporter(gameObject);
+                            StatusStripUpdate($"Finished exporting {gameObject.m_Name}");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Export GameObject:{gameObject.m_Name} error\r\n{ex.Message}\r\n{ex.StackTrace}");
+                            StatusStripUpdate("Error in export");
+                        }
+
+                        Progress.Report(++i, count);
+                    }
+
+                    Logger.Info("Finished exporting teapot assets");
+                }
+                else
+                {
+                    StatusStripUpdate("No Object selected for export.");
+                }
+
+                File.WriteAllLines("C:/Users/joshu/source/repos/TeapotStudio/AssetStudioGUI/bin/Debug/net6.0-windows/Extract/Log.txt", TeapotExporter.Output);
+
+                JobCompleteEvent.Set();
+            });
+
+
+        }
+
         public static void ExportAssets(string savePath, List<AssetItem> toExportAssets, ExportType exportType)
         {
             ThreadPool.QueueUserWorkItem(state =>
@@ -463,7 +511,7 @@ namespace AssetStudioGUI
                                 {
                                     exportPath = Path.Combine(savePath, Path.GetDirectoryName(asset.Container));
                                 }
-                                
+
                             }
                             else
                             {

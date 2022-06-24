@@ -318,12 +318,7 @@ namespace AssetStudioGUI
                 Directory.CreateDirectory(dir);
                 return true;
             }
-            fullPath = Path.Combine(dir, fileName + item.UniqueID + extension);
-            if (!File.Exists(fullPath))
-            {
-                Directory.CreateDirectory(dir);
-                return true;
-            }
+
             return false;
         }
 
