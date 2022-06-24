@@ -1,5 +1,5 @@
 # TeapotStudio
-Extract 3D models and textures for use in the MakePlace: Teapot app. 
+Extract 3D models and textures for use in the **MakePlace: Teapot** app. 
 
 Based on [AssetStudio](https://github.com/Perfare/AssetStudio) and the [GenshinStudio](https://github.com/Razmoth/GenshinStudio) fork.
 
