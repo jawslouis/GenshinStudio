@@ -157,13 +157,15 @@ namespace AssetStudioGUI
         public static (string, List<TreeNode>) BuildAssetData()
         {
             StatusStripUpdate("Building asset list...");
+            Logger.Info("Building asset list...");
 
+            Progress.Reset();
             string productName = null;
             var objectCount = assetsManager.assetsFileList.Sum(x => x.Objects.Count);
             var objectAssetItemDic = new Dictionary<Object, AssetItem>(objectCount);
             var containers = new List<(PPtr<Object>, string)>();
             int i = 0;
-            Progress.Reset();
+
             foreach (var assetsFile in assetsManager.assetsFileList)
             {
                 foreach (var asset in assetsFile.Objects)
@@ -306,22 +308,35 @@ namespace AssetStudioGUI
                     Progress.Report(++i, objectCount);
                 }
             }
+
+            Progress.Reset();
+            var containerCount = containers.Count();
+            i = 0;
             foreach ((var pptr, var container) in containers)
             {
                 if (pptr.TryGet(out var obj))
                 {
                     objectAssetItemDic[obj].Container = container;
                 }
+
+                Progress.Report(++i, containerCount);
             }
+
+            Progress.Reset();
+            var exportableCount = exportableAssets.Count();
+            i = 0;
+
             foreach (var tmp in exportableAssets)
             {
                 tmp.SetSubItems();
+                Progress.Report(++i, exportableCount);
             }
             containers.Clear();
 
             visibleAssets = exportableAssets;
 
             StatusStripUpdate("Building tree structure...");
+            Logger.Info("Building tree structure...");
 
             var treeNodeCollection = new List<TreeNode>();
             var treeNodeDictionary = new Dictionary<GameObject, GameObjectTreeNode>();
@@ -439,46 +454,37 @@ namespace AssetStudioGUI
 
         public static void TeapotExport(TreeNodeCollection nodes)
         {
-            ThreadPool.QueueUserWorkItem(state =>
+            var gameObjects = new List<GameObject>();
+            GetSelectedParentNode(nodes, gameObjects);
+            if (gameObjects.Count > 0)
             {
-                TeapotExporter.Output.Clear();
-                var gameObjects = new List<GameObject>();
-                GetSelectedParentNode(nodes, gameObjects);
-                if (gameObjects.Count > 0)
+
+                var count = gameObjects.Count;
+                int i = 0;
+                Progress.Reset();
+                foreach (var gameObject in gameObjects)
                 {
-
-                    var count = gameObjects.Count;
-                    int i = 0;
-                    Progress.Reset();
-                    foreach (var gameObject in gameObjects)
+                    StatusStripUpdate($"Exporting {gameObject.m_Name}");
+                    try
                     {
-                        StatusStripUpdate($"Exporting {gameObject.m_Name}");
-                        try
-                        {
-                            var converter = new TeapotExporter(gameObject);
-                            StatusStripUpdate($"Finished exporting {gameObject.m_Name}");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Export GameObject:{gameObject.m_Name} error\r\n{ex.Message}\r\n{ex.StackTrace}");
-                            StatusStripUpdate("Error in export");
-                        }
-
-                        Progress.Report(++i, count);
+                        var converter = new TeapotExporter(gameObject);
+                        StatusStripUpdate($"Finished exporting {gameObject.m_Name}");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Export GameObject:{gameObject.m_Name} error\r\n{ex.Message}\r\n{ex.StackTrace}");
+                        StatusStripUpdate("Error in export");
                     }
 
-                    Logger.Info("Finished exporting teapot assets");
-                }
-                else
-                {
-                    StatusStripUpdate("No Object selected for export.");
+                    Progress.Report(++i, count);
                 }
 
-                File.WriteAllLines("C:/Users/joshu/source/repos/TeapotStudio/AssetStudioGUI/bin/Debug/net6.0-windows/Extract/Log.txt", TeapotExporter.Output);
-
-                JobCompleteEvent.Set();
-            });
-
+                Logger.Info("Finished exporting teapot assets");
+            }
+            else
+            {
+                StatusStripUpdate("No Object selected for export.");
+            }
 
         }
 

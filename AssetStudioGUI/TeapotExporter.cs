@@ -19,8 +19,6 @@ namespace AssetStudioGUI
         public static HashSet<string> Exported = new HashSet<string>();
         public static HashSet<string> NullMeshes = new HashSet<string>();
 
-        public static List<string> Output = new List<string>();
-
         public ImportedFrame RootFrame { get; protected set; }
         public List<ImportedMesh> MeshList { get; protected set; } = new List<ImportedMesh>();
         public List<ImportedMaterial> MaterialList { get; protected set; } = new List<ImportedMaterial>();
@@ -72,8 +70,6 @@ namespace AssetStudioGUI
         private void ConvertMeshRenderer(Transform m_Transform)
         {
             m_Transform.m_GameObject.TryGet(out var m_GameObject);
-
-            Output.Add($"ConvertMeshRenderer: {m_GameObject.m_Name}");
 
             if (m_GameObject.m_MeshRenderer != null)
             {
@@ -132,8 +128,6 @@ namespace AssetStudioGUI
         {
             meshR.m_GameObject.TryGet(out var m_GameObject2);
 
-            Output.Add($"ProcessMeshRenderer: {m_GameObject2.m_Name}");
-
             var mesh = GetMesh(meshR);
             if (mesh == null)
             {
@@ -143,8 +137,6 @@ namespace AssetStudioGUI
                 {
                     nullName = m_GameObject2.m_Name;
                 }
-
-                Output.Add($"Mesh is null: {nullName}");
 
                 if (!NullMeshes.Contains(nullName))
                 {
@@ -159,7 +151,6 @@ namespace AssetStudioGUI
                 var asset = new AssetItem(mesh);
                 asset.Text = mesh.m_Name;
                 Exporter.ExportMesh(asset, ExportFolder + "Mesh/");
-                Output.Add($"Exported mesh: {mesh.m_Name}");
                 Exported.Add(mesh.m_Name);
             }
 
