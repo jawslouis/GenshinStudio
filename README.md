@@ -1,39 +1,33 @@
-# GenshinStudio
-Check out the [original AssetStudio project](https://github.com/Perfare/AssetStudio) for more information.
+# TeapotStudio
+Extract 3D models and textures for use in the MakePlace: Teapot app. 
 
-This is the release of GenshinStudio, Modded AssetStudio that should work with Genshin Impact/YuanShen.
+Based on [AssetStudio](https://github.com/Perfare/AssetStudio) and the [GenshinStudio](https://github.com/Razmoth/GenshinStudio) fork.
 
-Note: Requires Internet connection to fetch asset_index jsons.
-_____________________________________________________________________________________________________________________________
+## Usage
 
-Some features are:
-```
-- BLK/CAB methods support.
-- Integration with `Radioegor146` repo to load asset_index through `Options -> Specify AI version`.
-- Exportable Assets (not all of them) with XOR/JSON support for `MiHoYoBinData`
-- Togglable debug console.
-- Container/filename recovery for Assets.
-```
-_____________________________________________________________________________________________________________________________
-How to use:
+1. Build the BLK map (Misc -> Build BLKMap)
+   - Select the GenshinImpact_Data folder when prompted (e.g. `C:\Program Files\Genshin Impact\Genshin Impact game\GenshinImpact_Data`)
+   - This will take around 3 min
 
-CAB Method:
-```
-1. Extract blks to a specific location (File -> Extract folder).
-2. Build CAB Map (Misc. -> Build CABMap).
-3. Load CAB files.
-```
-BLK Method:
-```
-1. Build BLK Map (Misc. -> Build BLKMap).
-2. Load BLK files.
-```
+2. Load the BLKs (Teapot -> Load BLKs)
+   - Even when the progress bar is full, the asset structure still needs to be made
+   - Wait for the status at the bottom of the screen to read `Finished loading <x> files with <y> exportable assets`
 
-NOTE: in case of any `MeshRenderer/SkinnedMeshRenderer` errors, make sure to enable `Disable Renderer` option in `Export Options` before loading assets.
+3. Extract the files (Teapot -> Export files)
+   - Be patient. This takes another 5 min.
 
-Looking forward for feedback for issues/bugs to fix and update.
-_____________________________________________________________________________________________________________________________
-Special Thank to:
-- Khang06: [genshinblkstuff](https://github.com/khang06/genshinblkstuff) for blk/mhy0 extraction.
-- Radioegor146: [gi-asset-indexes](https://github.com/radioegor146/gi-asset-indexes) for recovered/updated asset_index's.
-- Ds5678: [AssetRipper](https://github.com/AssetRipper/AssetRipper)[[discord](https://discord.gg/XqXa53W2Yh)] for information about Asset Formats & Parsing.
+Done!
+
+## FAQ
+### Help! I can't get the plugin to work.
+Post on the [discord channel](https://discord.gg/YuvcPzCuhq) for help with troubleshooting.
+
+### Why are you not using the latest version of GenshinStudio?
+The latest v0.16.50 is not as robust in detecting mesh and texture files - about 30% of files are missing compared to using v0.16.30.
+
+## Donate
+Thank you for using this tool. If you enjoy my work and wish to support me, you can use the below links:
+
+Ko-fi: [https://ko-fi.com/jawslouis](https://ko-fi.com/jawslouis)
+
+Patreon: [https://www.patreon.com/jawslouis](https://www.patreon.com/jawslouis)

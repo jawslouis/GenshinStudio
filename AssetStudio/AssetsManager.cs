@@ -394,9 +394,11 @@ namespace AssetStudio
         {
             Logger.Info("Read assets...");
 
+            Progress.Reset();
+
             var progressCount = assetsFileList.Sum(x => x.m_Objects.Count);
             int i = 0;
-            Progress.Reset();
+
             foreach (var assetsFile in assetsFileList)
             {
                 foreach (var objectInfo in assetsFile.m_Objects)
@@ -561,7 +563,7 @@ namespace AssetStudio
                         }
                     }
                     else if (obj is SpriteAtlas m_SpriteAtlas)
-                    {   
+                    {
                         foreach (var m_PackedSprite in m_SpriteAtlas.m_PackedSprites)
                         {
                             if (m_PackedSprite.TryGet(out var m_Sprite))

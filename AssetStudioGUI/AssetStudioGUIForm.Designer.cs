@@ -82,6 +82,9 @@
             this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildBLKMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildCABMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.teapotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -162,7 +165,8 @@
             this.exportToolStripMenuItem,
             this.filterTypeToolStripMenuItem,
             this.debugMenuItem,
-            this.miscToolStripMenuItem});
+            this.miscToolStripMenuItem,
+            this.teapotToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1264, 24);
@@ -574,7 +578,7 @@
             // buildBLKMapToolStripMenuItem
             // 
             this.buildBLKMapToolStripMenuItem.Name = "buildBLKMapToolStripMenuItem";
-            this.buildBLKMapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.buildBLKMapToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.buildBLKMapToolStripMenuItem.Text = "Build BLKMap";
             this.buildBLKMapToolStripMenuItem.Click += new System.EventHandler(this.buildBLKMapToolStripMenuItem_Click);
             // 
@@ -584,6 +588,29 @@
             this.buildCABMapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.buildCABMapToolStripMenuItem.Text = "Build CABMap";
             this.buildCABMapToolStripMenuItem.Click += new System.EventHandler(this.buildCABMapToolStripMenuItem_Click);
+            //
+            // teapotToolStripMenuItem
+            // 
+            this.teapotToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadFilesToolStripMenuItem,
+            this.extractFilesToolStripMenuItem});
+            this.teapotToolStripMenuItem.Name = "teapotToolStripMenuItem";
+            this.teapotToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.teapotToolStripMenuItem.Text = "Teapot";
+            // 
+            // loadFilesToolStripMenuItem
+            // 
+            this.loadFilesToolStripMenuItem.Name = "loadFilesToolStripMenuItem";
+            this.loadFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadFilesToolStripMenuItem.Text = "Load BLKs";
+            this.loadFilesToolStripMenuItem.Click += new System.EventHandler(this.loadBLKsToolStripMenuItem_Click);
+            // 
+            // extractFilesToolStripMenuItem
+            // 
+            this.extractFilesToolStripMenuItem.Name = "extractFilesToolStripMenuItem";
+            this.extractFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extractFilesToolStripMenuItem.Text = "Extract Files";
+            this.extractFilesToolStripMenuItem.Click += new System.EventHandler(this.extractFilesToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -1276,6 +1303,9 @@
         private System.Windows.Forms.ToolStripMenuItem buildCABMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem16;
         private System.Windows.Forms.ToolStripComboBox specifyAIVersion;
+        private System.Windows.Forms.ToolStripMenuItem teapotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extractFilesToolStripMenuItem;
     }
 }
 

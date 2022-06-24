@@ -98,7 +98,7 @@ namespace AssetStudioGUI
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetConsoleTitle(string lpConsoleTitle);
@@ -116,6 +116,9 @@ namespace AssetStudioGUI
 
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
+
+        private string DataFolder = "";
+
         public AssetStudioGUIForm()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -248,6 +251,8 @@ namespace AssetStudioGUI
 
         private async void BuildAssetStructures()
         {
+            Logger.Info("Building assset structures...");
+
             if (assetsManager.assetsFileList.Count == 0)
             {
                 StatusStripUpdate("No Unity file can be loaded.");
@@ -268,11 +273,13 @@ namespace AssetStudioGUI
 
             assetListView.VirtualListSize = visibleAssets.Count;
 
+            Logger.Info("Updating Scene Tree...");
             sceneTreeView.BeginUpdate();
             sceneTreeView.Nodes.AddRange(treeNodeCollection.ToArray());
             sceneTreeView.EndUpdate();
             treeNodeCollection.Clear();
 
+            Logger.Info("Updating Classes...");
             classesListView.BeginUpdate();
             foreach (var version in typeMap)
             {
@@ -302,6 +309,8 @@ namespace AssetStudioGUI
                 filterTypeToolStripMenuItem.DropDownItems.Add(typeItem);
             }
             allToolStripMenuItem.Checked = true;
+
+            Logger.Info("Finishing up...");
             var log = $"Finished loading {assetsManager.assetsFileList.Count} files with {assetListView.Items.Count} exportable assets";
             var m_ObjectsCount = assetsManager.assetsFileList.Sum(x => x.m_Objects.Count);
             var objectsCount = assetsManager.assetsFileList.Sum(x => x.Objects.Count);
@@ -1036,7 +1045,7 @@ namespace AssetStudioGUI
             var str = JsonConvert.SerializeObject(obj, Formatting.Indented);
             PreviewText(str);
         }
-        
+
         private void PreviewAssetBundle(AssetBundle m_AssetBundle)
         {
             var str = JsonConvert.SerializeObject(m_AssetBundle, Formatting.Indented);
@@ -2150,6 +2159,7 @@ namespace AssetStudioGUI
             if (openFolderDialog.ShowDialog(this) == DialogResult.OK)
             {
                 Logger.Info("scanning for BLK files");
+                DataFolder = openFolderDialog.Folder;
                 var files = Directory.GetFiles(openFolderDialog.Folder, "*.blk", SearchOption.AllDirectories).ToList();
                 Logger.Info(string.Format("found {0} BLK files", files.Count()));
                 await Task.Run(() => AsbManager.BuildBLKMap(openFolderDialog.Folder, files));
@@ -2189,7 +2199,6 @@ namespace AssetStudioGUI
             {
                 Logger.Info($"AI v{version} not found !");
                 var json = await versionManager.DownloadAI(version);
-                
                 File.WriteAllText(path, json);
             }
             var loaded = await ResourceIndex.FromFile(path);
@@ -2208,6 +2217,72 @@ namespace AssetStudioGUI
             {
                 specifyAIVersion.Enabled = true;
             }
+        }
+
+        private async void loadBLKsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] fileList = { "00120932", "00754278", "00797808", "00936673", "01413878", "02187026", "02318517", "02445966", "02454415", "02483223", "03205740", "03385804", "03692369", "04229122", "04294737", "04828099", "04835189", "05048140", "05060285", "05459215", "05634463", "05713069", "06027917", "06117058", "06214174", "06255005", "06310498", "06357839", "06518864", "06606220", "06609683", "06779937", "06823989", "06866775", "07027150", "07170139", "07205806", "07423241", "07456439", "07660840", "07807072", "07828793", "07888769", "08015890", "08148544", "08781046", "08926852", "08966017", "09038592", "09127055", "09301136", "09562713", "09631506", "09661668", "09833248", "10028062", "10107960", "10476803", "10484298", "10622688", "10727968", "10742775", "10820709", "11122677", "11251070", "11280686", "11314311", "11882045", "11898561", "11979524", "12049701", "12187693", "12427609", "12437485", "12571507", "12736568", "12916117", "13320829", "13427326", "13428658", "13533057", "13771833", "14019927", "14100665", "14109448", "14209234", "14526500", "14659601", "14707585", "14780887", "14812390", "14855357", "15006491", "15078288", "15486309", "15515519", "15673443", "15809803", "15878551", "16103297", "16354781", "16605354", "16718688", "60227616" };
+
+            if (string.IsNullOrEmpty(DataFolder))
+            {
+                var openFolderDialog = new OpenFolderDialog();
+                openFolderDialog.Title = "Select GenshinImpact/YuanShen_Data Folder";
+                if (openFolderDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    DataFolder = openFolderDialog.Folder;
+                }
+            }
+
+            var files = new List<string>();
+            foreach (var fileString in fileList)
+            {
+                files.Add($"{DataFolder}/StreamingAssets/AssetBundles/blocks/00/{fileString}.blk");
+            }
+
+            await Task.Run(() =>
+            {
+                StatusStripUpdate("Loading files...");
+                assetsManager.LoadFiles(files.ToArray());
+            });
+            BuildAssetStructures();
+
+        }
+
+        private void SelectTeapotNodes(TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (node.Text.Contains("Homeworld_Interior"))
+                {
+                    node.Checked = true;
+                }
+                else
+                {
+                    SelectTeapotNodes(node.Nodes);
+                }
+            }
+
+        }
+
+        private async void extractFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Export meshes and textures
+            SelectTeapotNodes(sceneTreeView.Nodes);
+
+            Logger.Info("Extracting meshes and textures...");
+            await Task.Run(() => { TeapotExport(sceneTreeView.Nodes); });
+
+            Logger.Info("Extracting menu icons and files missed earlier...");
+
+            // Export menu icons and files missed in earlier pass
+
+            var exportList = exportableAssets.FindAll(x => ((x.Type == ClassIDType.Mesh) || (x.Type == ClassIDType.Texture2D))
+            && (x.Text.Contains("UI_HomeWorldTabIcon") || x.Text.Contains("Homeworld_Interior") || TeapotExporter.NullMeshes.Contains(x.Text))
+
+            );
+
+            Studio.ExportAssets(TeapotExporter.ExportFolder, exportList, ExportType.Convert);
+
         }
 
         private void glControl1_MouseWheel(object sender, MouseEventArgs e)
