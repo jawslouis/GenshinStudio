@@ -1,7 +1,16 @@
 # TeapotStudio
-Extract 3D models and textures for use in the **MakePlace: Teapot** app. 
+Extract 3D models and textures for use in the [MakePlace: Teapot](https://jawslouis.itch.io/teapot) app. The version distributed with the app requires the .NET Desktop Runtime 6.0. Variants depending on other versions of .NET can be downloaded [here](https://github.com/jawslouis/TeapotStudio/releases).
 
 Based on [AssetStudio](https://github.com/Perfare/AssetStudio) and the [GenshinStudio](https://github.com/Razmoth/GenshinStudio) fork.
+
+## Requirements
+
+- AssetStudio.net472
+   - [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/dotnet-framework/net472)
+- AssetStudio.net5
+   - [.NET Desktop Runtime 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
+- AssetStudio.net6
+   - [.NET Desktop Runtime 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
 
 ## Usage
 
@@ -10,8 +19,7 @@ Based on [AssetStudio](https://github.com/Perfare/AssetStudio) and the [GenshinS
    - This will take around 3 min
 
 2. Load the BLKs (Teapot -> Load BLKs)
-   - Even when the progress bar is full, the asset structure still needs to be made
-   - Wait for the status at the bottom of the screen to read `Finished loading <x> files with <y> exportable assets`
+   - A sequence of actions will take place. Wait for the status at the bottom of the screen to read `Finished loading <x> files with <y> exportable assets`
 
 3. Extract the files (Teapot -> Export files)
    - Be patient. This takes another 5 min.
