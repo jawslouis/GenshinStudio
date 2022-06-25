@@ -28,7 +28,7 @@ Done!
 
 ## FAQ
 
-### Help! I can't get the plugin to work.
+### Help! I can't get the tool to work.
 Post on the [discord channel](https://discord.gg/YuvcPzCuhq) for help with troubleshooting.
 
 ### Why are you not using the latest version of GenshinStudio?
