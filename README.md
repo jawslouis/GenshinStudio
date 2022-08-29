@@ -1,3 +1,5 @@
+## Note: This program is no longer being maintained. Unfortunately, it does not work with the latest version of the game.
+
 # TeapotStudio
 Extract 3D models and textures for use in the [MakePlace: Teapot](https://jawslouis.itch.io/teapot) app. The version distributed with the app requires the .NET Desktop Runtime 6.0. Variants depending on other versions of .NET can be downloaded [here](https://github.com/jawslouis/TeapotStudio/releases).
 
